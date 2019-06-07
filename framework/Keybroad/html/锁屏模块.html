@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>锁屏模块</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+/* GitHub stylesheet for MarkdownPad (http://markdownpad.com) */
+/* Author: Nicolas Hery - http://nicolashery.com */
+/* Version: b13fe65ca28d2e568c6ed5d7f06581183df8f2ff */
+/* Source: https://github.com/nicolahery/markdownpad-github */
+
+/* RESET
+=============================================================================*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* BODY
+=============================================================================*/
+
+body {
+  font-family: Helvetica, arial, freesans, clean, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+  padding: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+body>*:first-child {
+  margin-top: 0 !important;
+}
+
+body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* BLOCKS
+=============================================================================*/
+
+p, blockquote, ul, ol, dl, table, pre {
+  margin: 15px 0;
+}
+
+/* HEADERS
+=============================================================================*/
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+  font-size: inherit;
+}
+
+h1 {
+  font-size: 28px;
+  color: #000;
+}
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #ccc;
+  color: #000;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+h4 {
+  font-size: 16px;
+}
+
+h5 {
+  font-size: 14px;
+}
+
+h6 {
+  color: #777;
+  font-size: 14px;
+}
+
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+  margin-top: 10px;
+}
+
+/* LINKS
+=============================================================================*/
+
+a {
+  color: #4183C4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* LISTS
+=============================================================================*/
+
+ul, ol {
+  padding-left: 30px;
+}
+
+ul li > :first-child, 
+ol li > :first-child, 
+ul li ul:first-of-type, 
+ol li ol:first-of-type, 
+ul li ol:first-of-type, 
+ol li ul:first-of-type {
+  margin-top: 0px;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+  margin-bottom: 0;
+}
+
+dl {
+  padding: 0;
+}
+
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+
+dl dt:first-child {
+  padding: 0;
+}
+
+dl dt>:first-child {
+  margin-top: 0px;
+}
+
+dl dt>:last-child {
+  margin-bottom: 0px;
+}
+
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+
+dl dd>:first-child {
+  margin-top: 0px;
+}
+
+dl dd>:last-child {
+  margin-bottom: 0px;
+}
+
+/* CODE
+=============================================================================*/
+
+pre, code, tt {
+  font-size: 12px;
+  font-family: Consolas, "Liberation Mono", Courier, monospace;
+}
+
+code, tt {
+  margin: 0 0px;
+  padding: 0px 0px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px;
+}
+
+pre>code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+pre code, pre tt {
+  background-color: transparent;
+  border: none;
+}
+
+kbd {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #DDDDDD;
+    background-image: linear-gradient(#F1F1F1, #DDDDDD);
+    background-repeat: repeat-x;
+    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+    border-image: none;
+    border-radius: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    line-height: 10px;
+    padding: 1px 4px;
+}
+
+/* QUOTES
+=============================================================================*/
+
+blockquote {
+  border-left: 4px solid #DDD;
+  padding: 0 15px;
+  color: #777;
+}
+
+blockquote>:first-child {
+  margin-top: 0px;
+}
+
+blockquote>:last-child {
+  margin-bottom: 0px;
+}
+
+/* HORIZONTAL RULES
+=============================================================================*/
+
+hr {
+  clear: both;
+  margin: 15px 0;
+  height: 0px;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  border-bottom: 4px solid #ddd;
+  padding: 0;
+}
+
+/* TABLES
+=============================================================================*/
+
+table th {
+  font-weight: bold;
+}
+
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 6px 13px;
+}
+
+table tr {
+  border-top: 1px solid #ccc;
+  background-color: #fff;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+/* IMAGES
+=============================================================================*/
+
+img {
+  max-width: 100%
+}
+</style>
+</head>
+<body>
+<h1>锁屏模块</h1>
+<h2>KeyguardViewMediator模块</h2>
+<p>KeyguardViewMediator属于SystemUI中的一个模块,当systemUI启动时时会加载这个模块。</p>
+<p>SystemUIApplication.java</p>
+<pre><code>...
+/**
+ * The classes of the stuff to start.
+ */
+private final Class&lt;?&gt;[] SERVICES = new Class[] {
+        ...
+        com.android.systemui.keyguard.KeyguardViewMediator.class,
+        ...
+
+        com.android.systemui.keyboard.KeyboardUI.class,
+        ...
+};
+
+...
+
+/**
+ * Hold a reference on the stuff we start.
+ */
+private final SystemUI[] mServices = new SystemUI[SERVICES.length];
+private boolean mServicesStarted;
+private boolean mBootCompleted;
+private final Map&lt;Class&lt;?&gt;, Object&gt; mComponents = new HashMap&lt;&gt;();
+
+...
+
+private void startServicesIfNeeded(Class&lt;?&gt;[] services) {
+    ...
+    final int N = services.length;
+    for (int i=0; i&lt;N; i++) {
+        Class&lt;?&gt; cl = services[i];
+        if (DEBUG) Log.d(TAG, &quot;loading: &quot; + cl);
+        try {
+            Object newService = SystemUIFactory.getInstance().createInstance(cl);
+            //获取几个systemUI模块的
+            mServices[i] = (SystemUI) ((newService == null) ? cl.newInstance() : newService);
+        } catch (IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        } catch (InstantiationException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        mServices[i].mContext = this;
+        mServices[i].mComponents = mComponents;
+        if (DEBUG) Log.d(TAG, &quot;running: &quot; + mServices[i]);
+        //调用每个模块的start方法
+        mServices[i].start();
+
+        ...
+    }
+    mServicesStarted = true;
+}
+...
+</code></pre>
+
+<p>KeyguardViewMediator的class对象在 SERVICES集合中，最终会在startServicesIfNeeded方法中创建对象，并且调用它的start
+方法。</p>
+<p>KeyguardViewMediator.java</p>
+<pre><code>@Override
+public void start() {
+    synchronized (this) {
+        //该方法用于回去各种系统服务对象和初始化一些状态
+        setupLocked();
+    }
+    putComponent(KeyguardViewMediator.class, this);
+}
+</code></pre>
+
+<h2>锁屏界面的加载流程</h2>
+<p>锁屏加载流程时从SystemServer.java开始加载的。</p>
+<p>SystemServer.java</p>
+<pre><code>private void startOtherServices() {
+    ...
+    //启动WindowManagerService服务
+    wm = WindowManagerService.main(context, inputManager,
+                mFactoryTestMode != FactoryTest.FACTORY_TEST_LOW_LEVEL,
+                !mFirstBoot, mOnlyCore);
+    ServiceManager.addService(Context.WINDOW_SERVICE, wm);
+    ...
+    wm.systemReady();
+    ...
+}
+</code></pre>
+
+<p>如上面代码所示，系统会创建WindowManagerService服务对象，并且会调用带对象的systemReady()方法，
+最终会调用PhoneWindowManager中的systemReady()方法。</p>
+<p>WindowManagerService.java</p>
+<pre><code>...
+final WindowManagerPolicy mPolicy = new PhoneWindowManager();
+...
+public void systemReady() {
+    mPolicy.systemReady();
+}
+</code></pre>
+
+<p>PhoneWindowManager.java</p>
+<pre><code>/** {@inheritDoc} */
+@Override
+public void systemReady() {
+    mKeyguardDelegate = new KeyguardServiceDelegate(mContext,
+            this::onKeyguardShowingStateChanged);
+    mKeyguardDelegate.onSystemReady();
+...
+}
+</code></pre>
+
+<p>从上面代码中可以看出mPolicy实际上是PhoneWindowManager对象，
+在PhoneWindowManager.systemReady()方法中会创建一个KeyguardServiceDelegate对象，并且调用
+它的onSystemReady()方法。</p>
+<p>KeyguardServiceDelegate.java</p>
+<pre><code>...
+protected KeyguardServiceWrapper mKeyguardService;
+...
+public void onSystemReady() {
+    if (mKeyguardService != null) {
+        mKeyguardService.onSystemReady();
+    } else {
+        mKeyguardState.systemIsReady = true;
+    }
+}
+</code></pre>
+
+<p>KeyguardServiceWrapper.java</p>
+<pre><code>private IKeyguardService mService;
+...
+@Override // Binder interface
+public void onSystemReady() {
+    try {
+        mService.onSystemReady();
+    } catch (RemoteException e) {
+        Slog.w(TAG , &quot;Remote Exception&quot;, e);
+    }
+}
+</code></pre>
+
+<p>此处通过aidl远程访问SystemUI中的KeyguardService服务中onSystemReady()接口, 有关aidl用法，请
+查看<a href="../../service/AIDL.md">AIDL</a></p>
+<p>KeyguardService.java</p>
+<pre><code>public class KeyguardService extends Service {
+
+    @Override
+    public void onCreate() {
+        ((SystemUIApplication) getApplication()).startServicesIfNeeded();
+        mKeyguardViewMediator =
+            ((SystemUIApplication) getApplication()).getComponent(KeyguardViewMediator.class);
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+         return mBinder;
+    }
+    ...
+
+    private final IKeyguardService.Stub mBinder = new IKeyguardService.Stub() {
+        ...
+         @Override // Binder interface
+         public void onSystemReady() {
+            ...     
+                mKeyguardViewMediator.onSystemReady();
+            ...
+         }
+        ...
+    }
+}
+</code></pre>
+
+<p>在onCreate方法中获取之前存在Application中的KeyguardViewMediator对象，当KeyguardServiceWrapper
+中调用KeyguardService中onSystemReady()时，最后调用KeyguardViewMediator中的onSystemReady()方法。</p>
+<p>KeyguardViewMediator.java</p>
+<pre><code> /**
+ * Let us know that the system is ready after startup.
+ */
+public void onSystemReady() {
+    mSearchManager = (SearchManager) mContext.getSystemService(Context.SEARCH_SERVICE);
+    synchronized (this) {
+        if (DEBUG) Log.d(TAG, &quot;onSystemReady&quot;);
+        mSystemReady = true;
+        doKeyguardLocked(null);
+        mUpdateMonitor.registerCallback(mUpdateCallback);
+    }
+    mIsPerUserLock = StorageManager.isFileEncryptedNativeOrEmulated();
+    // Most services aren't available until the system reaches the ready state, so we
+    // send it here when the device first boots.
+    maybeSendUserPresentBroadcast();
+}
+</code></pre>
+
+<p>首先，解析下doKeyguardLocked(null)方法，</p>
+<pre><code> /**
+ * Enable the keyguard if the settings are appropriate.
+ */
+private void doKeyguardLocked(Bundle options) {
+    // if another app is disabling us, don't show
+    if (!mExternallyEnabled) {
+        if (DEBUG) Log.d(TAG, &quot;doKeyguard: not showing because externally disabled&quot;);
+
+        // note: we *should* set mNeedToReshowWhenReenabled=true here, but that makes
+        // for an occasional ugly flicker in this situation:
+        // 1) receive a call with the screen on (no keyguard) or make a call
+        // 2) screen times out
+        // 3) user hits key to turn screen back on
+        // instead, we reenable the keyguard when we know the screen is off and the call
+        // ends (see the broadcast receiver below)
+        // TODO: clean this up when we have better support at the window manager level
+        // for apps that wish to be on top of the keyguard
+        return;
+    }
+
+    // if the keyguard is already showing, don't bother
+    if (mStatusBarKeyguardViewManager.isShowing()) {
+        if (DEBUG) Log.d(TAG, &quot;doKeyguard: not showing because it is already showing&quot;);
+        resetStateLocked();
+        return;
+    }
+
+    // In split system user mode, we never unlock system user.
+    if (!mustNotUnlockCurrentUser()
+            || !mUpdateMonitor.isDeviceProvisioned()) {
+
+        // if the setup wizard hasn't run yet, don't show
+        final boolean requireSim = !SystemProperties.getBoolean(&quot;keyguard.no_require_sim&quot;, false);
+        final boolean absent = SubscriptionManager.isValidSubscriptionId(
+                mUpdateMonitor.getNextSubIdForState(ABSENT));
+        final boolean disabled = SubscriptionManager.isValidSubscriptionId(
+                mUpdateMonitor.getNextSubIdForState(IccCardConstants.State.PERM_DISABLED));
+        final boolean lockedOrMissing = mUpdateMonitor.isSimPinSecure()
+                || ((absent || disabled) &amp;&amp; requireSim);
+
+        if (!lockedOrMissing &amp;&amp; shouldWaitForProvisioning()) {
+            if (DEBUG) Log.d(TAG, &quot;doKeyguard: not showing because device isn't provisioned&quot;
+                    + &quot; and the sim is not locked or missing&quot;);
+            return;
+        }
+
+        if (mLockPatternUtils.isLockScreenDisabled(KeyguardUpdateMonitor.getCurrentUser())
+                &amp;&amp; !lockedOrMissing) {
+            if (DEBUG) Log.d(TAG, &quot;doKeyguard: not showing because lockscreen is off&quot;);
+            return;
+        }
+
+        if (mLockPatternUtils.checkVoldPassword(KeyguardUpdateMonitor.getCurrentUser())) {
+            if (DEBUG) Log.d(TAG, &quot;Not showing lock screen since just decrypted&quot;);
+            // Without this, settings is not enabled until the lock screen first appears
+            setShowingLocked(false);
+            hideLocked();
+            mUpdateMonitor.reportSuccessfulStrongAuthUnlockAttempt();
+            return;
+        }
+    }
+
+    if (DEBUG) Log.d(TAG, &quot;doKeyguard: showing the lock screen&quot;);
+    showLocked(options);
+}
+</code></pre>
+
+<p>上面的代码大概总结下，大概分为一下几个流程：</p>
+<ol>
+<li>其他应用不允许锁屏，则不显示锁屏界面。</li>
+<li>如果锁屏正在显示，则更新锁屏状态并退出该方法。</li>
+<li>如果安装向导未执行完毕，即设备未完成初始化绑定等操作，也不去显示keyguard。</li>
+<li>如果当前屏幕为灭屏状态，也不去显示keyguard。</li>
+<li>Without this, settings is not enabled until the lock screen first appears，这个不是很懂。</li>
+<li>
+<p>若上面几个条件都不满足，则开始显示锁屏见面。</p>
+<pre><code>/**
+* Send message to keyguard telling it to show itself
+* @see #handleShow
+*/
+
+private void showLocked(Bundle options) {
+
+     if (DEBUG) Log.d(TAG, &quot;showLocked&quot;);
+    // ensure we stay awake until we are finished displaying the keyguard
+    mShowKeyguardWakeLock.acquire();
+    Message msg = mHandler.obtainMessage(SHOW, options);
+    mHandler.sendMessage(msg);
+}
+</code></pre>
+
+</li>
+</ol>
+<p>发送handler消息，在Handle中调用handleShow((Bundle) msg.obj)方法。</p>
+<pre><code>...
+case SHOW:
+     handleShow((Bundle) msg.obj);
+     break;
+...
+</code></pre>
+
+<p>有关handleShow方法</p>
+<pre><code> /**
+ * Handle message sent by {@link #showLocked}.
+ * @see #SHOW
+ */
+private void handleShow(Bundle options) {
+    Trace.beginSection(&quot;KeyguardViewMediator#handleShow&quot;);
+    final int currentUser = KeyguardUpdateMonitor.getCurrentUser();
+    if (mLockPatternUtils.isSecure(currentUser)) {
+        mLockPatternUtils.getDevicePolicyManager().reportKeyguardSecured(currentUser);
+    }
+    synchronized (KeyguardViewMediator.this) {
+        if (!mSystemReady) {
+            if (DEBUG) Log.d(TAG, &quot;ignoring handleShow because system is not ready.&quot;);
+            return;
+        } else {
+            if (DEBUG) Log.d(TAG, &quot;handleShow&quot;);
+        }
+
+        setShowingLocked(true);
+
+        mStatusBarKeyguardViewManager.show(options);
+
+        mHiding = false;
+        mWakeAndUnlocking = false;
+        resetKeyguardDonePendingLocked();
+        mHideAnimationRun = false;
+        updateActivityLockScreenState();
+        adjustStatusBarLocked();
+        userActivity();
+
+        mShowKeyguardWakeLock.release();
+    }
+    mKeyguardDisplayManager.show();
+    Trace.endSection();
+}
+</code></pre>
+
+<p>调入到StatusBarKeyguardViewManager.java的show()方法</p>
+<p>StatusBarKeyguardViewManager.java</p>
+<pre><code>/**
+ * Show the keyguard.  Will handle creating and attaching to the view manager
+ * lazily.
+ */
+public void show(Bundle options) {
+    mShowing = true;
+    mStatusBarWindowManager.setKeyguardShowing(true);
+    mScrimController.abortKeyguardFadingOut();
+    reset();
+}
+</code></pre>
+
+<ol>
+<li>StatusBarKeyguardViewManager.java负责keyguard在status bar中创建、显示、隐藏、重置</li>
+<li>StatusBarWindowManager.java负责所有的status bar窗口状态的逻辑管理</li>
+</ol>
+
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->
