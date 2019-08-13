@@ -1,0 +1,3 @@
+git log --name-only 
+或者
+git log --name-only --oneline
