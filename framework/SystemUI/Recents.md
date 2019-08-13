@@ -1,6 +1,6 @@
 # Recents #
 该模块用于展示最近运行的应用列表。
-## 参考##
+## 参考 ##
 https://www.jianshu.com/p/2b7bd6ec76db
 ## 运行流程 ##
 ### Recents模块的启动和主要逻辑的分析 ###
