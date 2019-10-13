@@ -1,6 +1,0 @@
-https://blog.csdn.net/zy00000000001/article/details/51956883
-https://www.jianshu.com/p/9938d367b6db
-http://liuwangshu.cn/tags/Android%E5%8C%85%E7%AE%A1%E7%90%86%E6%9C%BA%E5%88%B6/
-
-默认某个动态权限开启
- 思路：在应用安装同时授予该权限。
