@@ -1,0 +1,20 @@
+1.获取Camera对象。
+Camera mCamera = Camera.open(int Cameraid);
+2.初始化Camera预览宽高和存储宽高。
+3.打开预览。
+mCamera.setPreviewDisplay(mSurfaceHolder);
+                mCamera.startPreview();
+4.拍照。
+mCamera.takePicture
+5.存储。
+
+
+人脸检测实现思路
+1.在相机开始预览后，调用startFaceDetection()方法开启人脸检测
+
+2.设置人脸检测回调setFaceDetectionListener(FaceDetectionListener listener)
+
+3.自定义一个FaceView，绘制人脸矩形区域
+
+4.在人脸检测回调中，将检测到的人脸信息传递给自定义的FaceView，FaceView根据人脸信息中矩形位置绘制矩形，然后重新绘制FaceView
+
