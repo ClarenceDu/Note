@@ -1,0 +1,5 @@
+https://blog.csdn.net/zhudaozhuan/article/details/51789002
+
+项目中出现：Error: out/target/common/obj/JAVA_LIBRARIES/com.system.info_intermediates/classes.jar:
+        unknown package name of class file com/system/info/SystemInfo.class
+        错误
