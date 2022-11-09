@@ -113,7 +113,7 @@ void ComposerService::connectLocked() {
 
 frameworks/native/libs/binder/include/binder/IServiceManager.h
 
-``
+```
 sp<IServiceManager> defaultServiceManager();
 
 template<typename INTERFACE>
@@ -126,4 +126,4 @@ status_t getService(const String16& name, sp<INTERFACE>* outService)
     }
     return NAME_NOT_FOUND;
 }
-``
+```
