@@ -43,6 +43,9 @@
                        public ClientCache::ErasedRecipient,
                        private IBinder::DeathRecipient,
                        private HWC2::ComposerCallback {
+    static char const* getServiceName() ANDROID_API {
+        return "SurfaceFlinger";
+    }
  }
  ```
 
@@ -71,4 +74,56 @@ void SurfaceComposerClient::onFirstRef() {
         }
     }
 }
+
+/*static*/ sp<ISurfaceComposer> ComposerService::getComposerService() {
+    ComposerService& instance = ComposerService::getInstance();
+    Mutex::Autolock _l(instance.mLock);
+    if (instance.mComposerService == nullptr) {
+        ComposerService::getInstance().connectLocked();
+        assert(instance.mComposerService != nullptr);
+        ALOGD("ComposerService reconnected");
+    }
+    return instance.mComposerService;
+}
+
+void ComposerService::connectLocked() {
+    const String16 name("SurfaceFlinger");
+    while (getService(name, &mComposerService) != NO_ERROR) {
+        usleep(250000);
+    }
+    assert(mComposerService != nullptr);
+
+    // Create the death listener.
+    class DeathObserver : public IBinder::DeathRecipient {
+        ComposerService& mComposerService;
+        virtual void binderDied(const wp<IBinder>& who) {
+            ALOGW("ComposerService remote (surfaceflinger) died [%p]",
+                  who.unsafe_get());
+            mComposerService.composerServiceDied();
+        }
+     public:
+        explicit DeathObserver(ComposerService& mgr) : mComposerService(mgr) { }
+    };
+
+    mDeathObserver = new DeathObserver(*const_cast<ComposerService*>(this));
+    IInterface::asBinder(mComposerService)->linkToDeath(mDeathObserver);
+}
+
 ```
+
+frameworks/native/libs/binder/include/binder/IServiceManager.h
+
+``
+sp<IServiceManager> defaultServiceManager();
+
+template<typename INTERFACE>
+status_t getService(const String16& name, sp<INTERFACE>* outService)
+{
+    const sp<IServiceManager> sm = defaultServiceManager();
+    if (sm != nullptr) {
+        *outService = interface_cast<INTERFACE>(sm->getService(name));
+        if ((*outService) != nullptr) return NO_ERROR;
+    }
+    return NAME_NOT_FOUND;
+}
+``
