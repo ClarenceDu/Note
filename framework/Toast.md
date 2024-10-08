@@ -209,20 +209,24 @@ final ArrayList<ToastRecord> mToastQueue = new ArrayList<>() //Toast 队列
                         }
                         //创建Token
                         Binder windowToken = new Binder();
-                        //调用WindowManagerService 里面的addWindowToken 方法
+                        //调用WindowManagerService 里面的addWindowToken 方法，addWindowToken 细节后面分析
                         mWindowManagerInternal.addWindowToken(windowToken, TYPE_TOAST, displayId,
                                 null /* options */);
+                        //根据传递的参数创建对应的record 对象
                         record = getToastRecord(callingUid, callingPid, pkg, isSystemToast, token,
                                 text, callback, duration, windowToken, displayId, textCallback);
+                        //将Toast入队列
                         mToastQueue.add(record);
+                        //获取Toast当前位置
                         index = mToastQueue.size() - 1;
+                       //调用Toast 存活
                         keepProcessAliveForToastIfNeededLocked(callingPid);
                     }
                     // If it's at index 0, it's the current toast.  It doesn't matter if it's
                     // new or just been updated, show it.
                     // If the callback fails, this will remove it from the list, so don't
                     // assume that it's valid after this.
-                    if (index == 0) {
+                    if (index == 0) {//如果当前Toast 在队列首，直接显示
                         showNextToastLocked(false);
                     }
                 } finally {
@@ -231,4 +235,17 @@ final ArrayList<ToastRecord> mToastQueue = new ArrayList<>() //Toast 队列
             }
         }
 ```
-
+```
+    private ToastRecord getToastRecord(int uid, int pid, String packageName, boolean isSystemToast,
+            IBinder token, @Nullable CharSequence text, @Nullable ITransientNotification callback,
+            int duration, Binder windowToken, int displayId,
+            @Nullable ITransientNotificationCallback textCallback) {
+        if (callback == null) { //目前默认Text 的callback == null
+            return new TextToastRecord(this, mStatusBar, uid, pid, packageName,
+                    isSystemToast, token, text, duration, windowToken, displayId, textCallback);
+        } else {
+            return new CustomToastRecord(this, uid, pid, packageName,
+                    isSystemToast, token, callback, duration, windowToken, displayId);
+        }
+    }
+```
