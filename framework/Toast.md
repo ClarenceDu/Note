@@ -149,3 +149,86 @@ public void show() {
   service.enqueueTextToast(pkg, mToken, mText, mDuration, displayId, callback);
 ```
 ### NotificationManagerService toast 分发流程
+####
+ 核心参数
+```
+ static final int MAX_PACKAGE_TOASTS = 5;//mToastQueue 里面最多存入5个应用的Toast
+final ArrayList<ToastRecord> mToastQueue = new ArrayList<>() //Toast 队列
+```
+```
+        @Override
+        public void enqueueTextToast(String pkg, IBinder token, CharSequence text, int duration,
+                int displayId, @Nullable ITransientNotificationCallback callback) {
+            enqueueToast(pkg, token, text, null, duration, displayId, callback);
+        }
+```
+```
+ private void enqueueToast(String pkg, IBinder token, @Nullable CharSequence text,
+                @Nullable ITransientNotification callback, int duration, int displayId,
+                @Nullable ITransientNotificationCallback textCallback) {
+            final int callingUid = Binder.getCallingUid();
+            //辨别是否是系统内部的toast
+            final boolean isSystemToast = isCallerSystemOrPhone()
+                    || PackageManagerService.PLATFORM_PACKAGE_NAME.equals(pkg);
+           //是否是应用自己渲染这个Toast ,目前callback 不为空，故是应用内部渲染
+            boolean isAppRenderedToast = (callback != null);
+           //确认Toast 是否能显示
+            if (!checkCanEnqueueToast(pkg, callingUid, isAppRenderedToast, isSystemToast)) {
+                return;
+            }
+
+            synchronized (mToastQueue) {
+                int callingPid = Binder.getCallingPid();
+                final long callingId = Binder.clearCallingIdentity();
+                try {
+                   //表示一个Toast 在系统中保存的实体
+                    ToastRecord record;
+                    //该Toast 是否存在在队列中
+                    int index = indexOfToastLocked(pkg, token);
+                    // If it's already in the queue, we update it in place, we don't
+                    // move it to the end of the queue.
+                    if (index >= 0) {
+                        record = mToastQueue.get(index);
+                        record.update(duration);
+                    } else { //表示Toast 之前没有被入队列
+                        // Limit the number of toasts that any given package can enqueue.
+                        // Prevents DOS attacks and deals with leaks.
+                        int count = 0;
+                        //显示使用Toast 的应用上限，目前是5个
+                        final int N = mToastQueue.size();
+                        for (int i = 0; i < N; i++) {
+                            final ToastRecord r = mToastQueue.get(i);
+                            if (r.pkg.equals(pkg)) {
+                                count++;
+                                if (count >= MAX_PACKAGE_TOASTS) {
+                                    Slog.e(TAG, "Package has already queued " + count
+                                            + " toasts. Not showing more. Package=" + pkg);
+                                    return;
+                                }
+                            }
+                        }
+                        //创建Token
+                        Binder windowToken = new Binder();
+                        //调用WindowManagerService 里面的addWindowToken 方法
+                        mWindowManagerInternal.addWindowToken(windowToken, TYPE_TOAST, displayId,
+                                null /* options */);
+                        record = getToastRecord(callingUid, callingPid, pkg, isSystemToast, token,
+                                text, callback, duration, windowToken, displayId, textCallback);
+                        mToastQueue.add(record);
+                        index = mToastQueue.size() - 1;
+                        keepProcessAliveForToastIfNeededLocked(callingPid);
+                    }
+                    // If it's at index 0, it's the current toast.  It doesn't matter if it's
+                    // new or just been updated, show it.
+                    // If the callback fails, this will remove it from the list, so don't
+                    // assume that it's valid after this.
+                    if (index == 0) {
+                        showNextToastLocked(false);
+                    }
+                } finally {
+                    Binder.restoreCallingIdentity(callingId);
+                }
+            }
+        }
+```
+
