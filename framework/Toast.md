@@ -2,6 +2,13 @@
 # android 版本
 android-12.0.0_r3
 https://blog.csdn.net/rzleilei/article/details/126328866
+## systemui 显示和应用渲染Toast 切换命令
+```
+//SystemUI 渲染Toast
+adb shell am compat enable CHANGE_TEXT_TOASTS_IN_THE_SYSTEM <package_name>
+//应用自己渲染Toast
+adb shell am compat disable CHANGE_TEXT_TOASTS_IN_THE_SYSTEM <package_name>
+```
 ## 应用调用
 ```
 Toast toast = new Toast(this);
