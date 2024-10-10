@@ -54,12 +54,15 @@ scontext=u:r:shell:s0 tcontext=u:r:netd:s0 tclass=unix_stream_socket
 - tcontext (u:r:netd:s0) 表示操作目标的环境，在此例中是归 netd 所有的某个 unix_stream_socket。
 - 顶部的 comm="ping" 可帮助您了解拒绝事件发生时正在运行的程序。在此示例中，给出的信息非常清晰明了。
 我们再看看另一个示例：
+```
 adb shell su root dmesg | grep 'avc: '
+```
 输出：
+```
 <5> type=1400 audit: avc:  denied  { read write } for  pid=177
 comm="rmt_storage" name="mem" dev="tmpfs" ino=6004 scontext=u:r:rmt:s0
 tcontext=u:object_r:kmem_device:s0 tclass=chr_file
-
+```
 以下是此拒绝事件的关键元素：
 - 操作 - 试图进行的操作会使用括号突出显示：read write 或 setenforce。
 - 操作方 - scontext（来源环境）条目表示操作方；在此例中为 rmt_storage 守护程序。
@@ -67,11 +70,15 @@ tcontext=u:object_r:kmem_device:s0 tclass=chr_file
 - 结果 - tclass（目标类别）条目表示操作对象的类型；在此例中为 chr_file（字符设备）。
 实际解决问题操作步骤
 抓取日志
+```
 dmesg|grep avc
 或者
 logcat|grep avc
+```
 生成政策命令
+```
 audit2allow -i aa.txt
+```
 
 日志
 ```
