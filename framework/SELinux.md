@@ -132,5 +132,5 @@ adb push Z:\data1\T1EJ\buildsystem\android12\out\target\product\x9sp_ms_24MY\sys
 adb push Z:\data1\T1EJ\buildsystem\android12\out\target\product\x9sp_ms_24MY\system\product\etc\selinux /system/product/etc/
 adb push Z:\data1\T1EJ\buildsystem\android12\out\target\product\x9sp_ms_24MY\vendor\etc\selinux /vendor/etc/
 ```
-参考
-官方文档
+# 参考
+[官方文档](https://source.android.google.cn/docs/security/features/selinux/concepts?hl=zh-cn)
